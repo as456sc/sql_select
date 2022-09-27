@@ -139,3 +139,56 @@ where name like '%me%';
 
 
 
+
+select album_id, count(performer_id) from album_performer 
+group by album_id;                        --Здравствуйте,скажите пожалуйста, почему данный скрипт выводит стобец album_id в 
+                                             --  последовательности (5,4,6,7,1), а не попорядку,является ли это критичным ?
+
+select year, count(name) from album
+where year between '2019' and '2020'
+group by year;
+
+
+select   album_id , avg(time_play) from track
+group by  album_id;
+
+
+select name, year from album 
+where year::text not  like '2020';
+
+
+
+select name from compilation
+where name like '%Eminem%';
+
+
+select count(genres_id) , genres_performer.performer_id, album_id from genres_performer
+join album_performer on genres_performer.performer_id = album_performer.album_id
+group by genres_performer.performer_id, album_performer.album_id
+having count(genres_id) > 1;
+
+
+
+select name,  track.track_id,compilation_track.сompilation_id from track
+full outer join compilation_track on track.track_id = compilation_track.track_id
+where compilation_track.сompilation_id is  null;
+
+
+
+
+select name, time_play, track.album_id, performer_id from track
+join album_performer on track.album_id = album_performer.album_id
+group by name,track.album_id,performer_id,time_play
+order by time_play asc
+FETCH first 1 row WITH ties;  -- задание 8,несовсем понятно нужна ли здесь последняя строка и как сделать так,чтобы если будут 
+                                 -- одинаковые значения,то код выводил их все,а не только самое первое
+
+
+
+
+select album_id,  count(name) from track   --9 задание,получилось сделать только так.Во-втором столбце выводит счётчик
+group by album_id;                         -- но дальше не совсем понятно,как достать оттуда минимальое значение
+ 
+
+
+
