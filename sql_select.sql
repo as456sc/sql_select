@@ -141,8 +141,7 @@ where name like '%me%';
 
 
 select album_id, count(performer_id) from album_performer 
-group by album_id;                        --Здравствуйте,скажите пожалуйста, почему данный скрипт выводит стобец album_id в 
-                                             --  последовательности (5,4,6,7,1), а не попорядку,является ли это критичным ?
+group by album_id;                        
 
 select year, count(name) from album
 where year between '2019' and '2020'
@@ -153,13 +152,20 @@ select   album_id , avg(time_play) from track
 group by  album_id;
 
 
-select name, year from album 
-where year::text not  like '2020';
+--4
+select album_id,album.name,year,performer_id,performer.name from album 
+join performer on performer.performer_id = album_id
+group by album_id, performer_id
+having year:: text  not like '2020' ;
 
 
 
-select name from compilation
-where name like '%Eminem%';
+--5
+select name, compilation.сompilation_id, compilation_track.сompilation_id  from compilation 
+join compilation_track on compilation.сompilation_id =  compilation_track.сompilation_id
+group by name,compilation.сompilation_id,compilation_track.сompilation_id
+having name like '%Jackson%'; 
+
 
 
 select count(genres_id) , genres_performer.performer_id, album_id from genres_performer
@@ -176,18 +182,29 @@ where compilation_track.сompilation_id is  null;
 
 
 
-select name, time_play, track.album_id, performer_id from track
-join album_performer on track.album_id = album_performer.album_id
-group by name,track.album_id,performer_id,time_play
-order by time_play asc
-FETCH first 1 row WITH ties;  -- задание 8,несовсем понятно нужна ли здесь последняя строка и как сделать так,чтобы если будут 
-                                 -- одинаковые значения,то код выводил их все,а не только самое первое
+--8
+
+
+--select name, time_play, track.album_id, performer_id from track
+--join album_performer on track.album_id = album_performer.album_id
+--group by name,track.album_id,performer_id,time_play
+--order by time_play asc
+--FETCH first 1 row WITH ties;  
 
 
 
+--9
 
-select album_id,  count(name) from track   --9 задание,получилось сделать только так.Во-втором столбце выводит счётчик
-group by album_id;                         -- но дальше не совсем понятно,как достать оттуда минимальое значение
+--select count(name),album_id from track
+--group by album_id
+--order by count(name) asc
+--limit 1 ;
+
+select count(track.name),track.album_id, album.name, album.album_id from track
+join album on album.album_id = track.album_id 
+group by track.album_id,album.name,album.album_id
+order by count(track.name) asc
+limit 1 ;
  
 
 
