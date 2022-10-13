@@ -182,6 +182,9 @@ where compilation_track.сompilation_id is  null;
 
 
 
+
+
+
 --8
 
 
@@ -191,6 +194,12 @@ where compilation_track.сompilation_id is  null;
 --order by time_play asc
 --FETCH first 1 row WITH ties;  
 
+
+
+select name,time_play,track.album_id, performer_id from track
+join album_performer  on album_performer.performer_id = track.album_id
+group by name,time_play,track.album_id,performer_id
+having time_play <= 200;
 
 
 --9
